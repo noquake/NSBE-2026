@@ -1,328 +1,818 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>My NSBE 2026 Schedule — Baltimore</title>
-<meta name="description" content="My personal schedule for the NSBE 2026 Annual Convention in Baltimore." />
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
-<style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    min-height: 100vh;
-    background: #0a0a0f;
-    color: #e8e6e1;
-    font-family: 'DM Sans', 'Helvetica Neue', sans-serif;
-    padding: 24px 16px 60px;
-    -webkit-font-smoothing: antialiased;
-  }
-  .header { text-align: center; margin-bottom: 28px; }
-  .header .sub {
-    font-family: 'Space Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 4px;
-    color: #6b6b7b;
-    text-transform: uppercase;
-    margin-bottom: 6px;
-  }
-  .header h1 {
-    font-size: 26px;
-    font-weight: 700;
-    background: linear-gradient(135deg, #ff4f5e, #ffb347, #ff4f5e);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    letter-spacing: -0.5px;
-  }
-  .day-tabs {
-    display: flex;
-    gap: 6px;
-    justify-content: center;
-    margin-bottom: 20px;
-  }
-  .day-tab {
-    background: transparent;
-    border: 1px solid transparent;
-    border-radius: 12px;
-    padding: 10px 16px;
-    cursor: pointer;
-    color: #6b6b7b;
-    font-family: 'Space Mono', monospace;
-    font-size: 13px;
-    font-weight: 400;
-    transition: all 0.2s;
-    min-width: 72px;
-  }
-  .day-tab.active {
-    background: linear-gradient(135deg, #1a1a2e, #2a2a3e);
-    border-color: #333350;
-    color: #fff;
-    font-weight: 700;
-  }
-  .day-tab .badges { display: flex; gap: 4px; justify-content: center; margin-top: 4px; }
-  .badge-red, .badge-yellow {
-    border-radius: 6px;
-    padding: 1px 5px;
-    font-size: 10px;
-    font-weight: 700;
-  }
-  .badge-red { background: #ff4f5e33; color: #ff4f5e; }
-  .badge-yellow { background: #ffb34733; color: #ffb347; }
-  .filters {
-    display: flex;
-    gap: 8px;
-    justify-content: center;
-    margin-bottom: 24px;
-    flex-wrap: wrap;
-  }
-  .filter-btn {
-    background: transparent;
-    border: 1px solid #222235;
-    border-radius: 20px;
-    padding: 6px 14px;
-    cursor: pointer;
-    color: #6b6b7b;
-    font-size: 12px;
-    font-weight: 600;
-    font-family: 'DM Sans', sans-serif;
-    transition: all 0.2s;
-  }
-  .filter-btn.active-all { background: #ffffff11; border-color: #e8e6e144; color: #e8e6e1; }
-  .filter-btn.active-red { background: #ff4f5e22; border-color: #ff4f5e44; color: #ff4f5e; }
-  .filter-btn.active-yellow { background: #ffb34722; border-color: #ffb34744; color: #ffb347; }
-  .day-label {
-    font-family: 'Space Mono', monospace;
-    font-size: 12px;
-    color: #6b6b7b;
-    letter-spacing: 1px;
-    margin-bottom: 14px;
-    padding-left: 4px;
-    text-transform: uppercase;
-  }
-  .events { display: flex; flex-direction: column; gap: 10px; }
-  .event-card {
-    border-radius: 10px;
-    padding: 14px 16px;
-    position: relative;
-    transition: all 0.2s;
-    border-width: 1px;
-    border-style: solid;
-    border-left-width: 3px;
-  }
-  .event-card.red {
-    background: linear-gradient(135deg, #ff4f5e08, #12121a);
-    border-color: #ff4f5e22;
-    border-left-color: #ff4f5e;
-  }
-  .event-card.yellow {
-    background: linear-gradient(135deg, #ffb34708, #12121a);
-    border-color: #ffb34722;
-    border-left-color: #ffb347;
-  }
-  .event-inner { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
-  .event-title { font-size: 14px; font-weight: 600; line-height: 1.35; margin-bottom: 6px; color: #e8e6e1; }
-  .event-time { font-family: 'Space Mono', monospace; font-size: 11px; color: #8888a0; }
-  .event-meta { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; flex-shrink: 0; }
-  .tag {
-    font-size: 10px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    padding: 2px 8px;
-    border-radius: 6px;
-    font-family: 'Space Mono', monospace;
-  }
-  .tag-red { color: #ff4f5e; background: #ff4f5e18; }
-  .tag-yellow { color: #ffb347; background: #ffb34718; }
-  .overlap { font-size: 9px; color: #ff9800; font-family: 'Space Mono', monospace; letter-spacing: 0.5px; }
-  .empty { text-align: center; padding: 40px; color: #4a4a5a; font-size: 14px; }
-  .summary {
-    margin-top: 32px;
-    padding: 16px 20px;
-    background: #12121a;
-    border: 1px solid #222235;
-    border-radius: 12px;
-  }
-  .summary .label {
-    font-family: 'Space Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 2px;
-    color: #6b6b7b;
-    text-transform: uppercase;
-    margin-bottom: 10px;
-  }
-  .summary-stats { display: flex; gap: 24px; }
-  .stat-num { font-size: 28px; font-weight: 700; }
-  .stat-label { font-size: 11px; color: #8888a0; }
-  .stat-red { color: #ff4f5e; }
-  .stat-yellow { color: #ffb347; }
-  .stat-total { color: #e8e6e1; }
-</style>
-</head>
-<body>
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>KAA NSBE 2026 Schedule</title>
+		<meta
+			name="description"
+			content="My personal schedule for the NSBE 2026 Annual Convention in Baltimore."
+		/>
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link
+			href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap"
+			rel="stylesheet"
+		/>
+		<style>
+			*,
+			*::before,
+			*::after {
+				box-sizing: border-box;
+				margin: 0;
+				padding: 0;
+			}
+			body {
+				min-height: 100vh;
+				background: #0a0a0f;
+				color: #e8e6e1;
+				font-family: "DM Sans", "Helvetica Neue", sans-serif;
+				padding: 24px 16px 60px;
+				-webkit-font-smoothing: antialiased;
+			}
+			.header {
+				text-align: center;
+				margin-bottom: 28px;
+			}
+			.header .sub {
+				font-family: "Space Mono", monospace;
+				font-size: 11px;
+				letter-spacing: 4px;
+				color: #6b6b7b;
+				text-transform: uppercase;
+				margin-bottom: 6px;
+			}
+			.header h1 {
+				font-size: 26px;
+				font-weight: 700;
+				background: linear-gradient(135deg, #ff4f5e, #ffb347, #ff4f5e);
+				-webkit-background-clip: text;
+				-webkit-text-fill-color: transparent;
+				background-clip: text;
+				letter-spacing: -0.5px;
+			}
+			.day-tabs {
+				display: flex;
+				gap: 6px;
+				justify-content: center;
+				margin-bottom: 20px;
+			}
+			.day-tab {
+				background: transparent;
+				border: 1px solid transparent;
+				border-radius: 12px;
+				padding: 10px 16px;
+				cursor: pointer;
+				color: #6b6b7b;
+				font-family: "Space Mono", monospace;
+				font-size: 13px;
+				font-weight: 400;
+				transition: all 0.2s;
+				min-width: 72px;
+			}
+			.day-tab.active {
+				background: linear-gradient(135deg, #1a1a2e, #2a2a3e);
+				border-color: #333350;
+				color: #fff;
+				font-weight: 700;
+			}
+			.day-tab .badges {
+				display: flex;
+				gap: 4px;
+				justify-content: center;
+				margin-top: 4px;
+			}
+			.badge-red,
+			.badge-yellow {
+				border-radius: 6px;
+				padding: 1px 5px;
+				font-size: 10px;
+				font-weight: 700;
+			}
+			.badge-red {
+				background: #ff4f5e33;
+				color: #ff4f5e;
+			}
+			.badge-yellow {
+				background: #ffb34733;
+				color: #ffb347;
+			}
+			.filters {
+				display: flex;
+				gap: 8px;
+				justify-content: center;
+				margin-bottom: 24px;
+				flex-wrap: wrap;
+			}
+			.filter-btn {
+				background: transparent;
+				border: 1px solid #222235;
+				border-radius: 20px;
+				padding: 6px 14px;
+				cursor: pointer;
+				color: #6b6b7b;
+				font-size: 12px;
+				font-weight: 600;
+				font-family: "DM Sans", sans-serif;
+				transition: all 0.2s;
+			}
+			.filter-btn.active-all {
+				background: #ffffff11;
+				border-color: #e8e6e144;
+				color: #e8e6e1;
+			}
+			.filter-btn.active-red {
+				background: #ff4f5e22;
+				border-color: #ff4f5e44;
+				color: #ff4f5e;
+			}
+			.filter-btn.active-yellow {
+				background: #ffb34722;
+				border-color: #ffb34744;
+				color: #ffb347;
+			}
+			.day-label {
+				font-family: "Space Mono", monospace;
+				font-size: 12px;
+				color: #6b6b7b;
+				letter-spacing: 1px;
+				margin-bottom: 14px;
+				padding-left: 4px;
+				text-transform: uppercase;
+			}
+			.events {
+				display: flex;
+				flex-direction: column;
+				gap: 10px;
+			}
+			.event-card {
+				border-radius: 10px;
+				padding: 14px 16px;
+				position: relative;
+				transition: all 0.2s;
+				border-width: 1px;
+				border-style: solid;
+				border-left-width: 3px;
+			}
+			.event-card.red {
+				background: linear-gradient(135deg, #ff4f5e08, #12121a);
+				border-color: #ff4f5e22;
+				border-left-color: #ff4f5e;
+			}
+			.event-card.yellow {
+				background: linear-gradient(135deg, #ffb34708, #12121a);
+				border-color: #ffb34722;
+				border-left-color: #ffb347;
+			}
+			.event-inner {
+				display: flex;
+				justify-content: space-between;
+				align-items: flex-start;
+				gap: 10px;
+			}
+			.event-title {
+				font-size: 14px;
+				font-weight: 600;
+				line-height: 1.35;
+				margin-bottom: 6px;
+				color: #e8e6e1;
+			}
+			.event-time {
+				font-family: "Space Mono", monospace;
+				font-size: 11px;
+				color: #8888a0;
+			}
+			.event-meta {
+				display: flex;
+				flex-direction: column;
+				align-items: flex-end;
+				gap: 4px;
+				flex-shrink: 0;
+			}
+			.tag {
+				font-size: 10px;
+				font-weight: 700;
+				text-transform: uppercase;
+				letter-spacing: 1px;
+				padding: 2px 8px;
+				border-radius: 6px;
+				font-family: "Space Mono", monospace;
+			}
+			.tag-red {
+				color: #ff4f5e;
+				background: #ff4f5e18;
+			}
+			.tag-yellow {
+				color: #ffb347;
+				background: #ffb34718;
+			}
+			.overlap {
+				font-size: 9px;
+				color: #ff9800;
+				font-family: "Space Mono", monospace;
+				letter-spacing: 0.5px;
+			}
+			.empty {
+				text-align: center;
+				padding: 40px;
+				color: #4a4a5a;
+				font-size: 14px;
+			}
+			.summary {
+				margin-top: 32px;
+				padding: 16px 20px;
+				background: #12121a;
+				border: 1px solid #222235;
+				border-radius: 12px;
+			}
+			.summary .label {
+				font-family: "Space Mono", monospace;
+				font-size: 11px;
+				letter-spacing: 2px;
+				color: #6b6b7b;
+				text-transform: uppercase;
+				margin-bottom: 10px;
+			}
+			.summary-stats {
+				display: flex;
+				gap: 24px;
+			}
+			.stat-num {
+				font-size: 28px;
+				font-weight: 700;
+			}
+			.stat-label {
+				font-size: 11px;
+				color: #8888a0;
+			}
+			.stat-red {
+				color: #ff4f5e;
+			}
+			.stat-yellow {
+				color: #ffb347;
+			}
+			.stat-total {
+				color: #e8e6e1;
+			}
+			.event-card.ended {
+				opacity: 0.45;
+			}
+			.event-card.ended .event-title,
+			.event-card.ended .event-time {
+				text-decoration: line-through;
+				text-decoration-color: #6b6b7b;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="header">
+			<div class="sub">NSBE 2026 · Baltimore</div>
+			<h1>Kwaku's Convention Schedule</h1>
+			<a
+				href="2026ConventionWebAgenda_03_14_26.pdf"
+				target="_blank"
+				style="
+					display: inline-block;
+					margin-top: 10px;
+					font-family: &quot;Space Mono&quot;, monospace;
+					font-size: 11px;
+					letter-spacing: 2px;
+					color: #8888a0;
+					text-decoration: none;
+					border: 1px solid #222235;
+					border-radius: 8px;
+					padding: 5px 12px;
+					transition: all 0.2s;
+				"
+				onmouseover="
+					this.style.color = '#e8e6e1';
+					this.style.borderColor = '#444460';
+				"
+				onmouseout="
+					this.style.color = '#8888a0';
+					this.style.borderColor = '#222235';
+				"
+				>MASTER SCHEDULE ↗</a
+			>
+		</div>
 
-<div class="header">
-  <div class="sub">NSBE 2026 · Baltimore</div>
-  <h1>My Convention Schedule</h1>
-</div>
+		<div class="day-tabs" id="dayTabs"></div>
+		<div class="filters" id="filters"></div>
+		<div class="day-label" id="dayLabel"></div>
+		<div class="events" id="eventsList"></div>
+		<div class="summary" id="summary"></div>
 
-<div class="day-tabs" id="dayTabs"></div>
-<div class="filters" id="filters"></div>
-<div class="day-label" id="dayLabel"></div>
-<div class="events" id="eventsList"></div>
-<div class="summary" id="summary"></div>
+		<script>
+			const EVENTS = [
+				// WED 3/18
+				{
+					date: "2026-03-18",
+					day: "Wednesday",
+					title: "Hospitality Suite Brought to You by Dell Technologies",
+					start: "8:30 PM",
+					end: "10:30 PM",
+					priority: "red",
+				},
+				{
+					date: "2026-03-18",
+					day: "Wednesday",
+					title: 'Opening Session: "The Future Starts Here"',
+					start: "6:00 PM",
+					end: "8:00 PM",
+					priority: "yellow",
+				},
+				{
+					date: "2026-03-18",
+					day: "Wednesday",
+					title: "Hospitality Suite Brought to You by Merck",
+					start: "8:30 PM",
+					end: "10:30 PM",
+					priority: "yellow",
+				},
+				// THU 3/19
+				{
+					date: "2026-03-19",
+					day: "Thursday",
+					title: "Region I Regional Meeting",
+					start: "8:00 AM",
+					end: "9:30 AM",
+					priority: "red",
+				},
+				{
+					date: "2026-03-19",
+					day: "Thursday",
+					title: "NSBE 2026 Press Briefing & Leadership Panel",
+					start: "9:00 AM",
+					end: "10:00 AM",
+					priority: "red",
+				},
+				{
+					date: "2026-03-19",
+					day: "Thursday",
+					title: "SIG Business Meeting: Healthcare Innovation",
+					start: "9:00 AM",
+					end: "10:00 AM",
+					priority: "yellow",
+				},
+				{
+					date: "2026-03-19",
+					day: "Thursday",
+					title: "Level Up Your Money: Wealth-Building Basics (Wells Fargo)",
+					start: "12:00 PM",
+					end: "2:00 PM",
+					priority: "red",
+				},
+				{
+					date: "2026-03-19",
+					day: "Thursday",
+					title: "Innovation Technology AI Impact-A-Thon (Honeywell)",
+					start: "12:00 PM",
+					end: "5:00 PM",
+					priority: "red",
+				},
+				{
+					date: "2026-03-19",
+					day: "Thursday",
+					title: "Pathways to STEM Careers in Engineering and Computer Science",
+					start: "1:00 PM",
+					end: "2:15 PM",
+					priority: "red",
+				},
+				{
+					date: "2026-03-19",
+					day: "Thursday",
+					title: "Data Analysis for Good and Social Impact",
+					start: "2:00 PM",
+					end: "2:50 PM",
+					priority: "red",
+				},
+				{
+					date: "2026-03-19",
+					day: "Thursday",
+					title: "Engineers Be Hacking Too: Roadmap to Ethical Hacking",
+					start: "4:00 PM",
+					end: "4:50 PM",
+					priority: "red",
+				},
+				{
+					date: "2026-03-19",
+					day: "Thursday",
+					title: "SIG Business Meeting: Energy",
+					start: "5:00 PM",
+					end: "6:00 PM",
+					priority: "red",
+				},
+				{
+					date: "2026-03-19",
+					day: "Thursday",
+					title: "NSBE Professionals Signing Day",
+					start: "6:00 PM",
+					end: "8:00 PM",
+					priority: "red",
+				},
+				{
+					date: "2026-03-19",
+					day: "Thursday",
+					title: "Hospitality Suite Brought to You by Rockwell Automation",
+					start: "8:30 PM",
+					end: "10:30 PM",
+					priority: "red",
+				},
+				{
+					date: "2026-03-19",
+					day: "Thursday",
+					title: "Career Fair Prep Center (Honeywell)",
+					start: "8:00 AM",
+					end: "4:00 PM",
+					priority: "yellow",
+				},
+				{
+					date: "2026-03-19",
+					day: "Thursday",
+					title: "NSBE Business Session: The Power of Progress",
+					start: "10:00 AM",
+					end: "12:00 PM",
+					priority: "yellow",
+				},
+				{
+					date: "2026-03-19",
+					day: "Thursday",
+					title: "Innovators' Luncheon: Taking Your Business to the Next Level",
+					start: "11:30 AM",
+					end: "1:00 PM",
+					priority: "yellow",
+				},
+				{
+					date: "2026-03-19",
+					day: "Thursday",
+					title: "Data Centers 101",
+					start: "1:00 PM",
+					end: "1:50 PM",
+					priority: "yellow",
+				},
+				{
+					date: "2026-03-19",
+					day: "Thursday",
+					title:
+						"The Future of STEM is Black: Afrofuturism, Equity, and Innovation",
+					start: "1:00 PM",
+					end: "1:50 PM",
+					priority: "yellow",
+				},
+				{
+					date: "2026-03-19",
+					day: "Thursday",
+					title: "Stay Ready – Prepare for Career Shifts You Don't See Coming",
+					start: "1:00 PM",
+					end: "2:15 PM",
+					priority: "yellow",
+				},
+				{
+					date: "2026-03-19",
+					day: "Thursday",
+					title: "Innovation Expo",
+					start: "1:00 PM",
+					end: "5:00 PM",
+					priority: "yellow",
+				},
+				{
+					date: "2026-03-19",
+					day: "Thursday",
+					title: "NSBE NextGen Innovation Expo",
+					start: "1:00 PM",
+					end: "5:00 PM",
+					priority: "yellow",
+				},
+				{
+					date: "2026-03-19",
+					day: "Thursday",
+					title:
+						"Engineering Equity: Designing Infrastructure That Serves Everyone (Jacobs)",
+					start: "2:30 PM",
+					end: "3:45 PM",
+					priority: "yellow",
+				},
+				{
+					date: "2026-03-19",
+					day: "Thursday",
+					title: "SIG Business Meeting: Public Policy",
+					start: "5:00 PM",
+					end: "6:00 PM",
+					priority: "yellow",
+				},
+				{
+					date: "2026-03-19",
+					day: "Thursday",
+					title: "NSBE Professionals Networking Suite (Merck)",
+					start: "6:30 PM",
+					end: "8:30 PM",
+					priority: "yellow",
+				},
+				// FRI 3/20
+				{
+					date: "2026-03-20",
+					day: "Friday",
+					title: "Region I Regional Meeting",
+					start: "8:00 AM",
+					end: "11:00 AM",
+					priority: "red",
+				},
+				{
+					date: "2026-03-20",
+					day: "Friday",
+					title: "Bridging the Gap between Industry, Government, and Academia",
+					start: "1:00 PM",
+					end: "1:50 PM",
+					priority: "red",
+				},
+				{
+					date: "2026-03-20",
+					day: "Friday",
+					title: "GEM GRAD Lab (Carnegie Mellon, UMD, Morgan State)",
+					start: "1:00 PM",
+					end: "5:00 PM",
+					priority: "red",
+				},
+				{
+					date: "2026-03-20",
+					day: "Friday",
+					title: "NSBE NextGen Innovation Expo",
+					start: "1:00 PM",
+					end: "5:00 PM",
+					priority: "red",
+				},
+				{
+					date: "2026-03-20",
+					day: "Friday",
+					title: "One Year In: Navigating Work Options in the U.S. in 2026",
+					start: "2:00 PM",
+					end: "2:50 PM",
+					priority: "red",
+				},
+				{
+					date: "2026-03-20",
+					day: "Friday",
+					title: "National Professionals Executive Board Candidates Q&A",
+					start: "3:30 PM",
+					end: "5:00 PM",
+					priority: "red",
+				},
+				{
+					date: "2026-03-20",
+					day: "Friday",
+					title: "From Curiosity to Career: Finding Your Fit in Cybersecurity",
+					start: "4:00 PM",
+					end: "5:15 PM",
+					priority: "red",
+				},
+				{
+					date: "2026-03-20",
+					day: "Friday",
+					title: "Hospitality Suite (UMD & Johns Hopkins Engineering)",
+					start: "8:30 PM",
+					end: "10:30 PM",
+					priority: "red",
+				},
+				{
+					date: "2026-03-20",
+					day: "Friday",
+					title: "Career Fair Prep Center (Honeywell)",
+					start: "8:00 AM",
+					end: "2:00 PM",
+					priority: "yellow",
+				},
+				{
+					date: "2026-03-20",
+					day: "Friday",
+					title: "Dissertation House",
+					start: "9:00 AM",
+					end: "3:00 PM",
+					priority: "yellow",
+				},
+				{
+					date: "2026-03-20",
+					day: "Friday",
+					title: "2026 Pitch Showcase Competition (Finnegan, Henderson...)",
+					start: "11:30 AM",
+					end: "4:00 PM",
+					priority: "yellow",
+				},
+				{
+					date: "2026-03-20",
+					day: "Friday",
+					title: "Finding the Right Grad School Advisor for You",
+					start: "1:00 PM",
+					end: "1:50 PM",
+					priority: "yellow",
+				},
+				{
+					date: "2026-03-20",
+					day: "Friday",
+					title: "Unwritten Rules of Corporate America",
+					start: "1:00 PM",
+					end: "2:15 PM",
+					priority: "yellow",
+				},
+				{
+					date: "2026-03-20",
+					day: "Friday",
+					title: "You Belong Here: (De)constructing Scholarly Identity",
+					start: "1:00 PM",
+					end: "3:00 PM",
+					priority: "yellow",
+				},
+				{
+					date: "2026-03-20",
+					day: "Friday",
+					title: "Innovation Expo",
+					start: "1:00 PM",
+					end: "5:00 PM",
+					priority: "yellow",
+				},
+				{
+					date: "2026-03-20",
+					day: "Friday",
+					title: "Modeling Confidence Beyond the Engineered Blueprint",
+					start: "2:00 PM",
+					end: "2:50 PM",
+					priority: "yellow",
+				},
+				{
+					date: "2026-03-20",
+					day: "Friday",
+					title:
+						"The Black Engineer's Blueprint to AI: From Code to Corporate Success",
+					start: "4:00 PM",
+					end: "4:50 PM",
+					priority: "yellow",
+				},
+				// SAT 3/21
+				{
+					date: "2026-03-21",
+					day: "Saturday",
+					title: "Region I Regional Meeting",
+					start: "8:00 AM",
+					end: "10:00 AM",
+					priority: "red",
+				},
+				{
+					date: "2026-03-21",
+					day: "Saturday",
+					title: "Agent-a-Thon: Build AI Agents in Copilot Studio (Microsoft)",
+					start: "9:00 AM",
+					end: "4:00 PM",
+					priority: "red",
+				},
+				{
+					date: "2026-03-21",
+					day: "Saturday",
+					title: "NSBE en Noir (+25) @ NSBE BOP",
+					start: "11:00 AM",
+					end: "2:00 PM",
+					priority: "yellow",
+				},
+			];
 
-<script>
-const EVENTS = [
-  // WED 3/18
-  { date:"2026-03-18", day:"Wednesday", title:"Hospitality Suite Brought to You by Dell Technologies", start:"8:30 PM", end:"10:30 PM", priority:"red" },
-  { date:"2026-03-18", day:"Wednesday", title:'Opening Session: "The Future Starts Here"', start:"6:00 PM", end:"8:00 PM", priority:"yellow" },
-  { date:"2026-03-18", day:"Wednesday", title:"Hospitality Suite Brought to You by Merck", start:"8:30 PM", end:"10:30 PM", priority:"yellow" },
-  // THU 3/19
-  { date:"2026-03-19", day:"Thursday", title:"Region I Regional Meeting", start:"8:00 AM", end:"9:30 AM", priority:"red" },
-  { date:"2026-03-19", day:"Thursday", title:"SIG Business Meeting: Healthcare Innovation", start:"9:00 AM", end:"10:00 AM", priority:"red" },
-  { date:"2026-03-19", day:"Thursday", title:"Level Up Your Money: Wealth-Building Basics (Wells Fargo)", start:"12:00 PM", end:"2:00 PM", priority:"red" },
-  { date:"2026-03-19", day:"Thursday", title:"Innovation Technology AI Impact-A-Thon (Honeywell)", start:"12:00 PM", end:"5:00 PM", priority:"red" },
-  { date:"2026-03-19", day:"Thursday", title:"Pathways to STEM Careers in Engineering and Computer Science", start:"1:00 PM", end:"2:15 PM", priority:"red" },
-  { date:"2026-03-19", day:"Thursday", title:"Data Analysis for Good and Social Impact", start:"2:00 PM", end:"2:50 PM", priority:"red" },
-  { date:"2026-03-19", day:"Thursday", title:"Engineers Be Hacking Too: Roadmap to Ethical Hacking", start:"4:00 PM", end:"4:50 PM", priority:"red" },
-  { date:"2026-03-19", day:"Thursday", title:"SIG Business Meeting: Energy", start:"5:00 PM", end:"6:00 PM", priority:"red" },
-  { date:"2026-03-19", day:"Thursday", title:"NSBE Professionals Signing Day", start:"6:00 PM", end:"8:00 PM", priority:"red" },
-  { date:"2026-03-19", day:"Thursday", title:"Hospitality Suite Brought to You by Rockwell Automation", start:"8:30 PM", end:"10:30 PM", priority:"red" },
-  { date:"2026-03-19", day:"Thursday", title:"Career Fair Prep Center (Honeywell)", start:"8:00 AM", end:"4:00 PM", priority:"yellow" },
-  { date:"2026-03-19", day:"Thursday", title:"NSBE Business Session: The Power of Progress", start:"10:00 AM", end:"12:00 PM", priority:"yellow" },
-  { date:"2026-03-19", day:"Thursday", title:"Innovators' Luncheon: Taking Your Business to the Next Level", start:"11:30 AM", end:"1:00 PM", priority:"yellow" },
-  { date:"2026-03-19", day:"Thursday", title:"Data Centers 101", start:"1:00 PM", end:"1:50 PM", priority:"yellow" },
-  { date:"2026-03-19", day:"Thursday", title:"The Future of STEM is Black: Afrofuturism, Equity, and Innovation", start:"1:00 PM", end:"1:50 PM", priority:"yellow" },
-  { date:"2026-03-19", day:"Thursday", title:"Engineering Retention Crisis & The High Cost of Losing Talent", start:"1:00 PM", end:"2:15 PM", priority:"yellow" },
-  { date:"2026-03-19", day:"Thursday", title:"Stay Ready – Prepare for Career Shifts You Don't See Coming", start:"1:00 PM", end:"2:15 PM", priority:"yellow" },
-  { date:"2026-03-19", day:"Thursday", title:"Innovation Expo", start:"1:00 PM", end:"5:00 PM", priority:"yellow" },
-  { date:"2026-03-19", day:"Thursday", title:"NSBE NextGen Innovation Expo", start:"1:00 PM", end:"5:00 PM", priority:"yellow" },
-  { date:"2026-03-19", day:"Thursday", title:"Research, Policy or Business?", start:"2:00 PM", end:"2:50 PM", priority:"yellow" },
-  { date:"2026-03-19", day:"Thursday", title:"Engineering Equity: Designing Infrastructure That Serves Everyone (Jacobs)", start:"2:30 PM", end:"3:45 PM", priority:"yellow" },
-  { date:"2026-03-19", day:"Thursday", title:"SIG Business Meeting: Public Policy", start:"5:00 PM", end:"6:00 PM", priority:"yellow" },
-  { date:"2026-03-19", day:"Thursday", title:"NSBE Professionals Networking Suite (Merck)", start:"6:30 PM", end:"8:30 PM", priority:"yellow" },
-  // FRI 3/20
-  { date:"2026-03-20", day:"Friday", title:"Region I Regional Meeting", start:"8:00 AM", end:"11:00 AM", priority:"red" },
-  { date:"2026-03-20", day:"Friday", title:"Bridging the Gap between Industry, Government, and Academia", start:"1:00 PM", end:"1:50 PM", priority:"red" },
-  { date:"2026-03-20", day:"Friday", title:"GEM GRAD Lab (Carnegie Mellon, UMD, Morgan State)", start:"1:00 PM", end:"5:00 PM", priority:"red" },
-  { date:"2026-03-20", day:"Friday", title:"NSBE NextGen Innovation Expo", start:"1:00 PM", end:"5:00 PM", priority:"red" },
-  { date:"2026-03-20", day:"Friday", title:"One Year In: Navigating Work Options in the U.S. in 2026", start:"2:00 PM", end:"2:50 PM", priority:"red" },
-  { date:"2026-03-20", day:"Friday", title:"National Professionals Executive Board Candidates Q&A", start:"3:30 PM", end:"5:00 PM", priority:"red" },
-  { date:"2026-03-20", day:"Friday", title:"From Curiosity to Career: Finding Your Fit in Cybersecurity", start:"4:00 PM", end:"5:15 PM", priority:"red" },
-  { date:"2026-03-20", day:"Friday", title:"Hospitality Suite (UMD & Johns Hopkins Engineering)", start:"8:30 PM", end:"10:30 PM", priority:"red" },
-  { date:"2026-03-20", day:"Friday", title:"Career Fair Prep Center (Honeywell)", start:"8:00 AM", end:"2:00 PM", priority:"yellow" },
-  { date:"2026-03-20", day:"Friday", title:"Dissertation House", start:"9:00 AM", end:"3:00 PM", priority:"yellow" },
-  { date:"2026-03-20", day:"Friday", title:"2026 Pitch Showcase Competition (Finnegan, Henderson...)", start:"11:30 AM", end:"4:00 PM", priority:"yellow" },
-  { date:"2026-03-20", day:"Friday", title:"Finding the Right Grad School Advisor for You", start:"1:00 PM", end:"1:50 PM", priority:"yellow" },
-  { date:"2026-03-20", day:"Friday", title:"Unwritten Rules of Corporate America", start:"1:00 PM", end:"2:15 PM", priority:"yellow" },
-  { date:"2026-03-20", day:"Friday", title:"You Belong Here: (De)constructing Scholarly Identity", start:"1:00 PM", end:"3:00 PM", priority:"yellow" },
-  { date:"2026-03-20", day:"Friday", title:"Innovation Expo", start:"1:00 PM", end:"5:00 PM", priority:"yellow" },
-  { date:"2026-03-20", day:"Friday", title:"Modeling Confidence Beyond the Engineered Blueprint", start:"2:00 PM", end:"2:50 PM", priority:"yellow" },
-  { date:"2026-03-20", day:"Friday", title:"The Black Engineer's Blueprint to AI: From Code to Corporate Success", start:"4:00 PM", end:"4:50 PM", priority:"yellow" },
-  // SAT 3/21
-  { date:"2026-03-21", day:"Saturday", title:"Region I Regional Meeting", start:"8:00 AM", end:"10:00 AM", priority:"red" },
-  { date:"2026-03-21", day:"Saturday", title:"Agent-a-Thon: Build AI Agents in Copilot Studio (Microsoft)", start:"9:00 AM", end:"4:00 PM", priority:"red" },
-  { date:"2026-03-21", day:"Saturday", title:"NSBE en Noir (+25) @ NSBE BOP", start:"11:00 AM", end:"2:00 PM", priority:"yellow" },
-];
+			const DAYS = [
+				{ key: "2026-03-18", label: "WED", full: "Wednesday, March 18" },
+				{ key: "2026-03-19", label: "THU", full: "Thursday, March 19" },
+				{ key: "2026-03-20", label: "FRI", full: "Friday, March 20" },
+				{ key: "2026-03-21", label: "SAT", full: "Saturday, March 21" },
+			];
 
-const DAYS = [
-  { key:"2026-03-18", label:"WED", full:"Wednesday, March 18" },
-  { key:"2026-03-19", label:"THU", full:"Thursday, March 19" },
-  { key:"2026-03-20", label:"FRI", full:"Friday, March 20" },
-  { key:"2026-03-21", label:"SAT", full:"Saturday, March 21" },
-];
+			const todayKey = new Date().toLocaleDateString("en-CA");
+			const validDays = DAYS.map((d) => d.key);
+			let activeDay = validDays.includes(todayKey) ? todayKey : "2026-03-18";
+			let filter = "all";
 
-let activeDay = "2026-03-18";
-let filter = "all";
+			function isEnded(ev) {
+				const now = new Date();
+				const [time, period] = ev.end.split(" ");
+				let [h, m] = time.split(":").map(Number);
+				if (period === "PM" && h !== 12) h += 12;
+				if (period === "AM" && h === 12) h = 0;
+				const [year, month, day] = ev.date.split("-").map(Number);
+				const endDate = new Date(year, month - 1, day, h, m);
+				return now > endDate;
+			}
 
-function parseTime(t) {
-  const [time, period] = t.split(" ");
-  let [h, m] = time.split(":").map(Number);
-  if (period === "PM" && h !== 12) h += 12;
-  if (period === "AM" && h === 12) h = 0;
-  return h * 60 + m;
-}
+			function parseTime(t) {
+				const [time, period] = t.split(" ");
+				let [h, m] = time.split(":").map(Number);
+				if (period === "PM" && h !== 12) h += 12;
+				if (period === "AM" && h === 12) h = 0;
+				return h * 60 + m;
+			}
 
-function hasConflict(ev, list) {
-  const s1 = parseTime(ev.start), e1 = parseTime(ev.end);
-  return list.some(o => o !== ev && o.date === ev.date && parseTime(o.start) < e1 && s1 < parseTime(o.end));
-}
+			function hasConflict(ev, list) {
+				const s1 = parseTime(ev.start),
+					e1 = parseTime(ev.end);
+				return list.some(
+					(o) =>
+						o !== ev &&
+						o.date === ev.date &&
+						parseTime(o.start) < e1 &&
+						s1 < parseTime(o.end),
+				);
+			}
 
-function render() {
-  // Day tabs
-  const tabsEl = document.getElementById("dayTabs");
-  tabsEl.innerHTML = DAYS.map(d => {
-    const isActive = d.key === activeDay;
-    const rc = EVENTS.filter(e => e.date === d.key && e.priority === "red").length;
-    const yc = EVENTS.filter(e => e.date === d.key && e.priority === "yellow").length;
-    return `<button class="day-tab ${isActive ? 'active' : ''}" data-day="${d.key}">
+			function render() {
+				// Day tabs
+				const tabsEl = document.getElementById("dayTabs");
+				tabsEl.innerHTML = DAYS.map((d) => {
+					const isActive = d.key === activeDay;
+					const rc = EVENTS.filter(
+						(e) => e.date === d.key && e.priority === "red",
+					).length;
+					const yc = EVENTS.filter(
+						(e) => e.date === d.key && e.priority === "yellow",
+					).length;
+					return `<button class="day-tab ${isActive ? "active" : ""}" data-day="${d.key}">
       <div>${d.label}</div>
       <div class="badges">
-        ${rc ? `<span class="badge-red">${rc}</span>` : ''}
-        ${yc ? `<span class="badge-yellow">${yc}</span>` : ''}
+        ${rc ? `<span class="badge-red">${rc}</span>` : ""}
+        ${yc ? `<span class="badge-yellow">${yc}</span>` : ""}
       </div>
     </button>`;
-  }).join('');
-  tabsEl.querySelectorAll('.day-tab').forEach(btn => btn.addEventListener('click', () => { activeDay = btn.dataset.day; render(); }));
+				}).join("");
+				tabsEl.querySelectorAll(".day-tab").forEach((btn) =>
+					btn.addEventListener("click", () => {
+						activeDay = btn.dataset.day;
+						render();
+					}),
+				);
 
-  // Filters
-  const dayEvts = EVENTS.filter(e => e.date === activeDay);
-  const rc = dayEvts.filter(e => e.priority === "red").length;
-  const yc = dayEvts.filter(e => e.priority === "yellow").length;
-  const filtersEl = document.getElementById("filters");
-  const filterDefs = [
-    { key:"all", label:`All (${rc+yc})`, cls:"active-all" },
-    { key:"red", label:`Must Go (${rc})`, cls:"active-red" },
-    { key:"yellow", label:`Maybe (${yc})`, cls:"active-yellow" },
-  ];
-  filtersEl.innerHTML = filterDefs.map(f =>
-    `<button class="filter-btn ${filter===f.key ? f.cls : ''}" data-filter="${f.key}">${f.label}</button>`
-  ).join('');
-  filtersEl.querySelectorAll('.filter-btn').forEach(btn => btn.addEventListener('click', () => { filter = btn.dataset.filter; render(); }));
+				// Filters
+				const dayEvts = EVENTS.filter((e) => e.date === activeDay);
+				const rc = dayEvts.filter((e) => e.priority === "red").length;
+				const yc = dayEvts.filter((e) => e.priority === "yellow").length;
+				const filtersEl = document.getElementById("filters");
+				const filterDefs = [
+					{ key: "all", label: `All (${rc + yc})`, cls: "active-all" },
+					{ key: "red", label: `Must Go (${rc})`, cls: "active-red" },
+					{ key: "yellow", label: `Maybe (${yc})`, cls: "active-yellow" },
+				];
+				filtersEl.innerHTML = filterDefs
+					.map(
+						(f) =>
+							`<button class="filter-btn ${filter === f.key ? f.cls : ""}" data-filter="${f.key}">${f.label}</button>`,
+					)
+					.join("");
+				filtersEl.querySelectorAll(".filter-btn").forEach((btn) =>
+					btn.addEventListener("click", () => {
+						filter = btn.dataset.filter;
+						render();
+					}),
+				);
 
-  // Day label
-  document.getElementById("dayLabel").textContent = DAYS.find(d=>d.key===activeDay)?.full.toUpperCase() || '';
+				// Day label
+				document.getElementById("dayLabel").textContent =
+					DAYS.find((d) => d.key === activeDay)?.full.toUpperCase() || "";
 
-  // Events
-  const filtered = EVENTS.filter(e => e.date === activeDay && (filter === "all" || e.priority === filter))
-    .sort((a,b) => parseTime(a.start) - parseTime(b.start));
-  const listEl = document.getElementById("eventsList");
-  if (!filtered.length) {
-    listEl.innerHTML = `<div class="empty">No events for this filter.</div>`;
-  } else {
-    listEl.innerHTML = filtered.map(ev => {
-      const isRed = ev.priority === "red";
-      const conflict = hasConflict(ev, filtered);
-      return `<div class="event-card ${isRed ? 'red' : 'yellow'}">
+				// Events
+				const filtered = EVENTS.filter(
+					(e) =>
+						e.date === activeDay && (filter === "all" || e.priority === filter),
+				).sort((a, b) => parseTime(a.start) - parseTime(b.start));
+				const listEl = document.getElementById("eventsList");
+				if (!filtered.length) {
+					listEl.innerHTML = `<div class="empty">No events for this filter.</div>`;
+				} else {
+					listEl.innerHTML = filtered
+						.map((ev) => {
+							const isRed = ev.priority === "red";
+							const conflict = hasConflict(ev, filtered);
+							const ended = isEnded(ev);
+							return `<div class="event-card ${isRed ? "red" : "yellow"}${ended ? " ended" : ""}">
         <div class="event-inner">
           <div style="flex:1">
             <div class="event-title">${ev.title}</div>
             <div class="event-time">${ev.start} – ${ev.end}</div>
           </div>
           <div class="event-meta">
-            <span class="tag ${isRed ? 'tag-red' : 'tag-yellow'}">${isRed ? 'GOING' : 'MAYBE'}</span>
-            ${conflict ? '<span class="overlap">⚠ overlap</span>' : ''}
+            <span class="tag ${isRed ? "tag-red" : "tag-yellow"}">${isRed ? "GOING" : "MAYBE"}</span>
+            ${conflict ? '<span class="overlap">⚠ overlap</span>' : ""}
           </div>
         </div>
       </div>`;
-    }).join('');
-  }
+						})
+						.join("");
+				}
 
-  // Summary
-  const totalRed = EVENTS.filter(e=>e.priority==="red").length;
-  const totalYellow = EVENTS.filter(e=>e.priority==="yellow").length;
-  document.getElementById("summary").innerHTML = `
+				// Summary
+				const totalRed = EVENTS.filter((e) => e.priority === "red").length;
+				const totalYellow = EVENTS.filter(
+					(e) => e.priority === "yellow",
+				).length;
+				document.getElementById("summary").innerHTML = `
     <div class="label">Full Convention Summary</div>
     <div class="summary-stats">
       <div><div class="stat-num stat-red">${totalRed}</div><div class="stat-label">Must-go events</div></div>
       <div><div class="stat-num stat-yellow">${totalYellow}</div><div class="stat-label">Maybe events</div></div>
       <div><div class="stat-num stat-total">${EVENTS.length}</div><div class="stat-label">Total tracked</div></div>
     </div>`;
-}
+			}
 
-render();
-</script>
-</body>
+			render();
+		</script>
+	</body>
 </html>
